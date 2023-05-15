@@ -45,11 +45,8 @@ group :development, :test do
   gem "pry"
   gem "factory_bot_rails"
   gem "faker"
+  gem "shoulda-matchers"
 end
-
-# group :test do
-#   gem "simplecov"
-# end
 
 group :development do
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
