@@ -127,8 +127,23 @@ RSpec.describe 'Vendors API' do
       expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
     end
 
-    xit 'returns an error 400 message if not all attributes are provided in request' do
+    it 'returns an error 400 message if not all attributes are provided in request' do
+      vendor_params = ({
+                        "name": "Buzzy Bees",
+                        "description": "local honey and wax products",
+                        "credit_accepted": false
+                      })
+      headers = {"CONTENT_TYPE" => "application/json"}
 
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      expect(response.status).to eq(400)
+      
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail]).
+      to eq("Validation failed: Contact name can't be blank, Contact phone can't be blank")
     end
   end
 end
