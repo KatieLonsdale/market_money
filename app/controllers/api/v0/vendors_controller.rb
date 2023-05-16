@@ -16,4 +16,16 @@ class Api::V0::VendorsController < ApplicationController
       render json: ErrorVendorSerializer.new(@vendor).not_found, status: 404
     end
   end
+
+  def create
+    @vendor = Vendor.create(vendor_params)
+    render json: VendorSerializer.new(@vendor)
+  end
+
+  private
+
+  def vendor_params
+    params.require(:vendor).permit(:name, :description, :contact_name, :contact_phone, :credit_accepted)
+  end
+
 end
