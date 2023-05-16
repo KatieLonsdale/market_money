@@ -54,14 +54,16 @@ RSpec.describe 'Vendors API' do
   describe 'get one vendor' do
     it 'returns vendor details for a given vendor' do
       vendors = create_list(:vendor, 2)
-      vendor = vendors.first
+      vendor_1 = vendors.first
 
-      get "/api/v0/vendors/#{vendor.id}"
+      get "/api/v0/vendors/#{vendor_1.id}"
 
       expect(response).to be_successful
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendor = data[:data]
+
+      expect(data.count).to eq(1)
 
       expect(vendor).to have_key(:id)
       expect(vendor[:id]).to be_a(String)
