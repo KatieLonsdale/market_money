@@ -12,6 +12,29 @@ RSpec.describe 'Vendors API' do
     expect(response).to be_successful
 
     data = JSON.parse(response.body, symbolize_names: true)
-    require 'pry'; binding.pry
+    vendors = data[:data]
+
+    vendors.each do |vendor|
+      expect(vendor).to have_key(:id)
+      expect(vendor[:id]).to be_a(String)
+      expect(vendor).to have_key(:type)
+      expect(vendor[:type]).to be_a(String)
+      
+      attributes = vendor[:attributes]
+      expect(attributes).to have_key(:name)
+      expect(attributes[:name]).to be_a(String)
+
+      expect(attributes).to have_key(:description)
+      expect(attributes[:description]).to be_a(String)
+
+      expect(attributes).to have_key(:contact_name)
+      expect(attributes[:contact_name]).to be_a(String)
+
+      expect(attributes).to have_key(:contact_phone)
+      expect(attributes[:contact_phone]).to be_a(String)
+
+      expect(attributes).to have_key(:credit_accepted)
+      expect(attributes[:credit_accepted]).to eq(true || false)
+    end
   end
 end
