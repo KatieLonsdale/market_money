@@ -6,6 +6,14 @@ RSpec.describe Vendor do
     it { should have_many(:markets).through(:market_vendors) }
   end
 
+  describe 'validations' do
+    it { should validate_presence_of :name}
+    it { should validate_presence_of :description}
+    it { should validate_presence_of :contact_name}
+    it { should validate_presence_of :contact_phone}
+    it { should validate_presence_of :credit_accepted}
+  end
+
   describe 'class methods' do
     describe 'find_vendor' do
       it 'returns a vendor if id is valid' do
