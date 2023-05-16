@@ -26,4 +26,12 @@ class Vendor < ApplicationRecord
       ErrorVendor.new(vendor.errors.full_messages)
     end
   end
+
+  def update_vendor(params)
+    if update(params)
+      self
+    else
+      ErrorVendor.new(errors.full_messages)
+    end
+  end
 end
