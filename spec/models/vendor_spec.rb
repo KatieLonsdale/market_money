@@ -22,10 +22,35 @@ RSpec.describe Vendor do
         expect(Vendor.find_vendor(vendor.id)).to eq(vendor)
       end
 
-      it 'returns a error_vendor is id is not valid' do
+      it 'returns an error_vendor if id is not valid' do
         vendor = Vendor.find_vendor(1)
         expect(vendor).to be_a ErrorVendor
         expect(vendor.error_message).to eq("Couldn't find Vendor with 'id'=1")
+      end
+    end
+
+    describe 'new_vendor' do
+      it 'returns a vendor if new record is valid' do
+        params = ({
+                    "name": "Buzzy Bees",
+                    "description": "local honey and wax products",
+                    "contact_name": "Berly Couwer",
+                    "contact_phone": "8389928383",
+                    "credit_accepted": false
+                  })
+
+        expect(Vendor.new_vendor(params)).to be_a Vendor
+      end
+      it 'returns an error_vendor if new record is not valid' do
+        params = ({
+          "name": "Buzzy Bees",
+          "description": "local honey and wax products",
+          "credit_accepted": false
+        })
+
+        vendor = Vendor.new_vendor(params)
+        expect(vendor).to be_a ErrorVendor
+        expect(vendor.error_message).to eq(["Contact name can't be blank", "Contact phone can't be blank"])
       end
     end
   end
