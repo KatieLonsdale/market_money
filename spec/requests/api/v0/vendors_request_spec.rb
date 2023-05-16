@@ -34,7 +34,18 @@ RSpec.describe 'Vendors API' do
       expect(attributes[:contact_phone]).to be_a(String)
 
       expect(attributes).to have_key(:credit_accepted)
-      expect(attributes[:credit_accepted]).to eq(true || false)
+      expect(attributes[:credit_accepted]).to be_in([true, false])
     end
+  end
+  it 'sends custom 404 message if invalid market id is passed in' do
+    get "/api/v0/markets/1/vendors"
+
+    expect(response.status).to eq(404)
+
+    data = JSON.parse(response.body, symbolize_names: true)
+
+    expect(data).to have_key(:errors)
+    expect(data[:errors][0]).to have_key(:detail)
+    expect(data[:errors][0][:detail]).to eq("Couldn't find Market with 'id'=1")
   end
 end
