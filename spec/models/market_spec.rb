@@ -6,7 +6,22 @@ RSpec.describe Market do
     it { should have_many(:vendors).through(:market_vendors) }
   end
 
-  describe 'instance variables' do
+  describe 'class methods' do
+    describe 'find_market' do
+      it 'returns a market if id is valid' do
+        market = create(:market)
+        expect(Market.find_market(market.id)).to eq(market)
+      end
+
+      it 'returns a error_market is id is not valid' do
+        market = Market.find_market(1)
+        expect(market).to be_a ErrorMarket
+        expect(market.error_message).to eq("Couldn't find Market with 'id'=1")
+      end
+    end
+  end
+
+  describe 'instance methods' do
     before(:each) do
       @market_1 = create(:market)
       @market_2 = create(:market)
