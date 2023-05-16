@@ -5,8 +5,9 @@ class Vendor < ApplicationRecord
   validates_presence_of :name, 
                         :description, 
                         :contact_name, 
-                        :contact_phone, 
-                        :credit_accepted
+                        :contact_phone
+  validates :credit_accepted, inclusion: [true, false]
+  validates :credit_accepted, exclusion: [nil]
 
   def self.find_vendor(id)
     vendor = Vendor.find_by(id: id)
