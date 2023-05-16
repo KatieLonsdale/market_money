@@ -8,44 +8,45 @@ describe 'Markets API' do
 
     expect(response).to be_successful
 
-    markets = JSON.parse(response.body, symbolize_names: true)
+    data = JSON.parse(response.body, symbolize_names: true)
+    markets = data[:data]
 
     expect(markets.count).to eq 3
 
     markets.each do |market|
-      expect(market).to have_key(:name)
-      expect(market[:name]).to be_a(String)
+      expect(market).to have_key(:id)
+      expect(market[:id]).to be_a(String)
+      expect(market).to have_key(:type)
+      expect(market[:type]).to be_a(String)
+      
+      attributes = market[:attributes]
 
-      expect(market).to have_key(:street)
-      expect(market[:street]).to be_a(String)
+      expect(attributes).to have_key(:name)
+      expect(attributes[:name]).to be_a(String)
 
-      expect(market).to have_key(:city)
-      expect(market[:city]).to be_a(String)
+      expect(attributes).to have_key(:street)
+      expect(attributes[:street]).to be_a(String)
 
-      expect(market).to have_key(:county)
-      expect(market[:county]).to be_a(String)
+      expect(attributes).to have_key(:city)
+      expect(attributes[:city]).to be_a(String)
 
-      expect(market).to have_key(:state)
-      expect(market[:state]).to be_a(String)
+      expect(attributes).to have_key(:county)
+      expect(attributes[:county]).to be_a(String)
 
-      expect(market).to have_key(:zip)
-      expect(market[:zip]).to be_a(String)
+      expect(attributes).to have_key(:state)
+      expect(attributes[:state]).to be_a(String)
 
-      expect(market).to have_key(:lat)
-      expect(market[:lat]).to be_a(String)
+      expect(attributes).to have_key(:zip)
+      expect(attributes[:zip]).to be_a(String)
 
-      expect(market).to have_key(:lon)
-      expect(market[:lon]).to be_a(String)
+      expect(attributes).to have_key(:lat)
+      expect(attributes[:lat]).to be_a(String)
+
+      expect(attributes).to have_key(:lon)
+      expect(attributes[:lon]).to be_a(String)
+
+      expect(attributes).to have_key(:vendor_count)
+      expect(attributes[:vendor_count]).to be_a(Integer)
     end
-  end
-
-  it 'should have a key named data' do
-    create_list(:market, 3)
-    
-    get '/api/v0/markets'
-
-    markets = JSON.parse(response.body, symbolize_names: true)
-
-    expect(markets).to have_key(:data)
   end
 end
