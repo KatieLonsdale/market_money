@@ -54,4 +54,30 @@ RSpec.describe Vendor do
       end
     end
   end
+
+  describe 'instance methods' do
+    describe 'update_vendor' do
+      before(:each) do
+        @vendor = create(:vendor)
+      end
+      it 'returns a vendor if update is valid' do
+        params = ({
+                    "contact_name": "Kimberly Couwer",
+                    "credit_accepted": false
+                  })
+
+        expect(@vendor.update_vendor(params)).to eq(@vendor)
+      end
+      it 'returns an error_vendor if update is not valid' do
+        params = ({
+                    "contact_name": "",
+                    "credit_accepted": false
+                  })
+
+        vendor = @vendor.update_vendor(params)
+        expect(vendor).to be_a ErrorVendor
+        expect(vendor.error_message).to eq(["Contact name can't be blank"])
+      end
+    end
+  end
 end
