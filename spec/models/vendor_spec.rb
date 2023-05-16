@@ -11,7 +11,8 @@ RSpec.describe Vendor do
     it { should validate_presence_of :description}
     it { should validate_presence_of :contact_name}
     it { should validate_presence_of :contact_phone}
-    it { should validate_presence_of :credit_accepted}
+    it { should validate_inclusion_of(:credit_accepted).in_array([true, false]) }
+    it { should validate_exclusion_of(:credit_accepted).in_array([nil]) }
   end
 
   describe 'class methods' do
