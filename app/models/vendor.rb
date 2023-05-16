@@ -17,4 +17,13 @@ class Vendor < ApplicationRecord
       ErrorVendor.new("Couldn't find Vendor with 'id'=#{id}")
     end
   end
+
+  def self.new_vendor(params)
+    vendor = Vendor.new(params)
+    if vendor.save
+      vendor
+    else
+      ErrorVendor.new(vendor.errors.full_messages)
+    end
+  end
 end
