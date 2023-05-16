@@ -5,7 +5,7 @@ RSpec.describe 'Vendors API' do
     it 'returns all vendors for a given market' do
       market_1 = create(:market)
       market_2 = create(:market)
-      m1_vendors = create_list(:market_vendor, 3, market_id: market_1.id)
+      m1_vendors = create_list(:market_vendor, 4, market_id: market_1.id)
       m2_vendors = create_list(:market_vendor, 2, market_id: market_2.id)
 
       get "/api/v0/markets/#{market_1.id}/vendors"
@@ -14,6 +14,7 @@ RSpec.describe 'Vendors API' do
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendors = data[:data]
+      expect(vendors.count).to eq(4)
 
       vendors.each do |vendor|
         expect(vendor).to have_key(:id)
@@ -99,6 +100,35 @@ RSpec.describe 'Vendors API' do
       expect(data).to have_key(:errors)
       expect(data[:errors][0]).to have_key(:detail)
       expect(data[:errors][0][:detail]).to eq("Couldn't find Vendor with 'id'=1")
+    end
+  end
+
+  describe 'create a vendor' do
+    it 'returns the new vendor details if request is valid' do
+      vendor_params = ({
+                        "name": "Buzzy Bees",
+                        "description": "local honey and wax products",
+                        "contact_name": "Berly Couwer",
+                        "contact_phone": "8389928383",
+                        "credit_accepted": false
+                      })
+
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      new_vendor = Vendor.last
+
+      expect(response).to be_successful
+
+      expect(new_vendor.name).to eq(vendor_params[:name])
+      expect(new_vendor.description).to eq(vendor_params[:description])
+      expect(new_vendor.contact_name).to eq(vendor_params[:contact_name])
+      expect(new_vendor.contact_phone).to eq(vendor_params[:contact_phone])
+      expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
+    end
+
+    xit 'returns an error 400 message if not all attributes are provided in request' do
+
     end
   end
 end
