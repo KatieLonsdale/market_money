@@ -52,7 +52,8 @@ describe 'Markets API' do
   end
 
   it 'sends all market attributes if valid id is passed in' do
-    market = create(:market)
+    markets = create_list(:market, 3)
+    market = markets.first
 
     get "/api/v0/markets/#{market.id}"
 

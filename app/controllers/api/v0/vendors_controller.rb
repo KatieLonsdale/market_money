@@ -7,4 +7,13 @@ class Api::V0::VendorsController < ApplicationController
       render json: ErrorMarketSerializer.new(@market).not_found, status: 404
     end
   end
+
+  def show
+    @vendor = Vendor.find_vendor(params[:id])
+    if @vendor.class == Vendor
+      render json: VendorSerializer.new(@vendor)
+    else
+      render json: ErrorVendorSerializer.new(@vendor).not_found, status: 404
+    end
+  end
 end
