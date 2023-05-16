@@ -18,8 +18,13 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def create
-    @vendor = Vendor.create(vendor_params)
-    render json: VendorSerializer.new(@vendor)
+    @vendor = Vendor.new_vendor(vendor_params)
+    if @vendor.class == Vendor
+      @vendor.save
+      render json: VendorSerializer.new(@vendor)
+    else
+      render json: ErrorVendorSerializer.new(@vendor).create_failed, status: 400
+    end
   end
 
   private
