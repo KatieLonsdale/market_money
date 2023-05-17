@@ -23,4 +23,15 @@ RSpec.describe MarketVendor do
       end
     end
   end
+
+  describe 'instance methods' do
+    describe 'exists?' do
+      it 'checks if an unsaved record is a duplicate' do
+        market = create(:market)
+        vendor = create(:vendor)
+        mv = MarketVendor.create!(market_id: market.id, vendor_id: vendor.id)
+        expect(mv.exist?).to be true
+      end
+    end
+  end
 end
