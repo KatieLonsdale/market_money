@@ -2,7 +2,7 @@ class Api::V0::MarketVendorsController < ApplicationController
   def create
     @mv = MarketVendor.new(market_vendor_params)
     if @mv.save
-      render json: successful_creation_message
+      render json: successful_creation_message, status: 201
     elsif @mv.exist?
       render json: ErrorMarketVendorSerializer.new(@mv).message, status: 422
     else
