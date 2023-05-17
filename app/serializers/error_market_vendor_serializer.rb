@@ -2,6 +2,7 @@ class ErrorMarketVendorSerializer
   def initialize(error_object)
     @error_object = error_object
   end
+  
   def not_found
     {
       errors: [

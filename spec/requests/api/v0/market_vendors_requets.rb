@@ -24,7 +24,7 @@ RSpec.describe 'Market Vendors API' do
       expect(MarketVendor.first.market_id).to eq(market_1.id)
       expect(MarketVendor.first.vendor_id).to eq(vendor_1.id)
     end
-    it 'returns a custom error 404 message if market does not exist' do
+    it 'returns an error 404 message if market does not exist' do
       vendor_1 = create(:vendor)
       mv_params = ({
                     "market_id": 1,
@@ -43,7 +43,7 @@ RSpec.describe 'Market Vendors API' do
       expect(data[:errors][0][:detail]).to eq("Validation failed: Market must exist")
     end
 
-    it 'returns a custom error 404 message if vendor does not exist' do
+    it 'returns an error 404 message if vendor does not exist' do
       market_1 = create(:market)
       mv_params = ({
                     "market_id": market_1.id,
@@ -61,5 +61,7 @@ RSpec.describe 'Market Vendors API' do
       expect(data[:errors][0]).to have_key(:detail)
       expect(data[:errors][0][:detail]).to eq("Validation failed: Vendor must exist")
     end
+
+    it 'returns '
   end
 end

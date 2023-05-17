@@ -39,7 +39,7 @@ RSpec.describe 'Vendors API' do
         expect(attributes[:credit_accepted]).to be_in([true, false])
       end
     end
-    it 'sends custom 404 message if invalid market id is passed in' do
+    it 'sends 404 message if invalid market id is passed in' do
       get "/api/v0/markets/1/vendors"
 
       expect(response.status).to eq(404)
@@ -90,7 +90,7 @@ RSpec.describe 'Vendors API' do
       expect(attributes[:credit_accepted]).to be_in([true, false])
     end
 
-    it 'sends custom 404 message if invalid vendor id is passed in' do
+    it 'sends 404 message if invalid vendor id is passed in' do
       get "/api/v0/vendors/1"
 
       expect(response.status).to eq(404)
