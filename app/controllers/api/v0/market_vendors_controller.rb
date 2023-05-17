@@ -10,6 +10,15 @@ class Api::V0::MarketVendorsController < ApplicationController
     end
   end
 
+  def destroy
+    @mv = MarketVendor.find_mv(params[:market_vendor])
+    if @mv.class == MarketVendor
+      @mv.destroy
+    else
+      render json: ErrorMarketVendorSerializer.new(@mv).failed_delete, status: 404
+    end
+  end
+
   private
   def market_vendor_params
     params.require(:market_vendor).permit(:market_id, :vendor_id)
