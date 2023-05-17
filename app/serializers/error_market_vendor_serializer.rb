@@ -3,7 +3,7 @@ class ErrorMarketVendorSerializer
     @error_object = error_object
   end
   
-  def not_found
+  def message
     {
       errors: [
         {detail: "Validation failed: #{format_message(@error_object)}"}
