@@ -85,4 +85,47 @@ RSpec.describe 'Market Vendors API' do
       .to eq("Validation failed: Market vendor asociation between market with market_id=#{market_1.id} and vendor_id=#{vendor_1.id} already exists")
     end
   end
+
+  describe 'delete marketvendor' do
+    it 'deletes a market vendor' do
+      market = create(:market)
+      vendor = create(:vendor)
+      mv = MarketVendor.create!(market_id: market.id, vendor_id: vendor.id)
+
+      mv_params = ({
+        "market_id": market.id,
+        "vendor_id": vendor.id
+      })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      
+      delete '/api/v0/market_vendors', headers: headers, params: JSON.generate(market_vendor: mv_params)
+
+      expect(response).to be_successful
+
+      expect(MarketVendor.all.count).to eq(0)
+      expect(Market.all.count).to eq(1)
+      expect(Vendor.all.count).to eq(1)
+    end
+
+    it 'returns returns an error 404 message if market vendor doesnt exist' do
+      market = create(:market)
+      vendor = create(:vendor)
+
+      mv_params = ({
+        "market_id": market.id,
+        "vendor_id": vendor.id
+      })
+      headers = {"CONTENT_TYPE" => "application/json"}
+      
+      delete '/api/v0/market_vendors', headers: headers, params: JSON.generate(market_vendor: mv_params)
+
+      expect(response.status).to eq(404)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail]).to eq("No MarketVendor with market_id=#{market.id} AND vendor_id=#{vendor.id} exists")
+    end
+  end
 end
