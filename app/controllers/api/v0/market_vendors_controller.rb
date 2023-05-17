@@ -3,8 +3,10 @@ class Api::V0::MarketVendorsController < ApplicationController
     @mv = MarketVendor.new(market_vendor_params)
     if @mv.save
       render json: successful_creation_message
+    elsif @mv.exist?
+      render json: ErrorMarketVendorSerializer.new(@mv).message, status: 422
     else
-      render json: ErrorMarketVendorSerializer.new(@mv).not_found, status: 404
+      render json: ErrorMarketVendorSerializer.new(@mv).message, status: 404
     end
   end
 
