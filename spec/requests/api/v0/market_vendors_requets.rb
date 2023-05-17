@@ -62,6 +62,27 @@ RSpec.describe 'Market Vendors API' do
       expect(data[:errors][0][:detail]).to eq("Validation failed: Vendor must exist")
     end
 
-    it 'returns '
+    it 'returns an error 422 message if relationship already exists' do
+      market_1 = create(:market)
+      vendor_1 = create(:vendor)
+      mv = MarketVendor.create!(market_id: market_1.id, vendor_id: vendor_1.id)
+
+      mv_params = ({
+                    "market_id": market_1.id,
+                    "vendor_id": vendor_1.id
+                  })
+      headers = {"CONTENT_TYPE" => "application/json"}
+
+      post '/api/v0/market_vendors', headers: headers, params: JSON.generate(market_vendor: mv_params)
+
+      expect(response.status).to eq(422)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail])
+      .to eq("Validation failed: Market vendor asociation between market with market_id=#{market_1.id} and vendor_id=#{vendor_1.id} already exists")
+    end
   end
 end
