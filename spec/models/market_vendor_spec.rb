@@ -34,6 +34,14 @@ RSpec.describe MarketVendor do
         params = {market_id: market.id, vendor_id: vendor.id}
         expect(MarketVendor.find_mv(params)).to eq(mv)
       end
+
+      it 'returns an errormarketvendor object if no marketvendor exists' do
+        market = create(:market)
+        vendor = create(:vendor)
+
+        params = {market_id: market.id, vendor_id: vendor.id}
+        expect(MarketVendor.find_mv(params)).to be_a ErrorMarketVendor
+      end
     end
   end
 
