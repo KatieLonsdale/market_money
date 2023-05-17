@@ -6,7 +6,12 @@ class MarketVendor < ApplicationRecord
   validate :unique_market_vendor
 
   def self.find_mv(ids)
-    MarketVendor.find_by(market_id: ids[:market_id], vendor_id: ids[:vendor_id])
+    mv = MarketVendor.find_by(market_id: ids[:market_id], vendor_id: ids[:vendor_id])
+    if mv
+      mv
+    else
+      ErrorMarketVendor.new("No MarketVendor with market_id=#{ids[:market_id]} AND vendor_id=#{ids[:vendor_id]} exists")
+    end
   end
 
   def unique_market_vendor
