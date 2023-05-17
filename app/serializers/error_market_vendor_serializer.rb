@@ -14,4 +14,12 @@ class ErrorMarketVendorSerializer
   def format_message(error_object)
     error_object.errors.full_messages.join(', ')
   end
+
+  def failed_delete
+    {
+      errors: [
+        {detail: @error_object.error_message}
+      ]
+    }
+  end
 end
