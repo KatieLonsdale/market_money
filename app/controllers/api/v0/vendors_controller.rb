@@ -21,7 +21,7 @@ class Api::V0::VendorsController < ApplicationController
     @vendor = Vendor.new_vendor(vendor_params)
     if @vendor.class == Vendor
       @vendor.save
-      render json: VendorSerializer.new(@vendor)
+      render json: VendorSerializer.new(@vendor), status: 201
     else
       render json: ErrorVendorSerializer.new(@vendor).create_failed, status: 400
     end
@@ -36,6 +36,15 @@ class Api::V0::VendorsController < ApplicationController
       else
         render json: ErrorVendorSerializer.new(updated).create_failed, status: 400
       end
+    else
+      render json: ErrorVendorSerializer.new(@vendor).not_found, status: 404
+    end
+  end
+
+  def destroy
+    @vendor = Vendor.find_vendor(params[:id])
+    if @vendor.class == Vendor
+      @vendor.destroy
     else
       render json: ErrorVendorSerializer.new(@vendor).not_found, status: 404
     end
