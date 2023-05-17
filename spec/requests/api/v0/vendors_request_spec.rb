@@ -250,4 +250,28 @@ RSpec.describe 'Vendors API' do
       to eq("Validation failed: Contact name can't be blank")
     end
   end
+
+  describe 'delete a vendor' do
+    it 'deletes given vendor and their market vendors' do
+      vendor_1 = create(:vendor)
+      create(:market_vendor, vendor_id: vendor_1.id)
+      delete "/api/v0/vendors/#{vendor_1.id}"
+
+      expect(response).to be_successful
+      expect(Vendor.all.count).to eq(0)
+      expect(MarketVendor.all.count).to eq(0)
+      expect(Market.all.count).to eq(1)
+    end
+    it 'returns an error 404 message if vendor id is invalid' do
+      delete "/api/v0/vendors/1"
+
+      expect(response.status).to eq(404)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail]).to eq("Couldn't find Vendor with 'id'=1")
+    end
+  end
 end
