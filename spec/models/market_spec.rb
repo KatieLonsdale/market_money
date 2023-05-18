@@ -66,6 +66,21 @@ RSpec.describe Market do
         expect(Market.search(params)).to eq([market])
       end
     end
+
+    describe 'valid_queries' do
+      it 'returns any param keys with valid queries' do
+        params = ({state: 'New Mexico', city: 'Albuquerque', name: 'Example'})
+        expect(Market.valid_queries(params)).to eq([:state, :city, :name])
+      end
+      it 'returns an errormarket object if there are blank queries' do
+        params = ({state: 'New Mexico', city: '', name: 'Example'})
+        expect(Market.valid_queries(params)).to be_a ErrorMarket
+      end
+      it 'returns an errormarket object if there is a city query without a state' do
+        params = ({city: 'Albuquerque', name: 'Example'})
+        expect(Market.valid_queries(params)).to be_a ErrorMarket
+      end
+    end
   end
 
   describe 'instance methods' do
