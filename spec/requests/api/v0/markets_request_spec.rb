@@ -165,4 +165,54 @@ describe 'Markets API' do
       .to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
     end
   end
+
+  describe 'get cash dispensers near a market' do
+    it 'returns a list of nearby atms sorted by distance' do
+      market = create(:market, lat: '35.077529', lon: '-106.600449')
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+
+      expect(response.status).to eq(200)
+      # expect(response).to be_successful
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      atms = data[:data]
+
+      expect(atms.count > 1).to be(true)
+
+      atms.each do |atm|
+        expect(atm).to have_key(:id)
+        expect(atm).to have_key(:type)
+        expect(atm[:type]).to eq('atm')
+
+        attributes = atm[:attributes]
+
+        expect(attributes).to have_key(:name)
+        expect(attributes[:name]).to eq("ATM")
+        expect(attributes).to have_key(:address)
+        expect(attributes).to have_key(:lat)
+        expect(attributes).to have_key(:lon)
+        expect(attributes).to have_key(:distance)
+      end
+      
+      closest_atm = atms.first
+      attributes = closest_atm[:attributes]
+      expect(attributes[:address]).to eq("3902 Central Avenue Southeast, Albuquerque, NM 87108")
+      expect(attributes[:lat]).to eq(35.079044)
+      expect(attributes[:lon]).to eq(-106.60068)
+      expect(attributes[:distance]).to eq(169.766658)
+    end
+
+    it 'returns a 404 message if invalid market id is entered' do
+      get "/api/v0/markets/1/nearest_atms"
+
+      expect(response.status).to eq(404)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail])
+      .to eq("Couldn't find Market with 'id'=1")
+    end
+  end
 end
