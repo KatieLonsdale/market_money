@@ -13,11 +13,16 @@ class Api::V0::MarketsController < ApplicationController
   end
 
   def search
-    @markets = Market.search(params)
+    @markets = Market.search(market_params)
     if @markets.class != ErrorMarket
       render json: MarketSerializer.new(@markets)
     else
       render json: ErrorMarketSerializer.new(@markets).message, status: 422
     end
+  end
+
+  private
+  def market_params
+    params.permit(:name, :street, :city, :county, :state, :zip, :lat, :lon)
   end
 end
