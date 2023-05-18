@@ -14,10 +14,10 @@ class Api::V0::MarketsController < ApplicationController
 
   def search
     @markets = Market.search(params)
-    if @market.class != ErrorMarket
+    if @markets.class != ErrorMarket
       render json: MarketSerializer.new(@markets)
     else
-      render json: ErrorMarketSerializer.new(@market).message, status: 422
+      render json: ErrorMarketSerializer.new(@markets).message, status: 422
     end
   end
 end
