@@ -21,6 +21,11 @@ class Api::V0::MarketsController < ApplicationController
     end
   end
 
+  def nearest_atms
+    @atms = AtmFacade.new(params[:id]).closest_atms
+    response = render json: AtmSerializer.new(@atms)
+  end
+
   private
   def market_params
     params.permit(:name, :street, :city, :county, :state, :zip, :lat, :lon)
