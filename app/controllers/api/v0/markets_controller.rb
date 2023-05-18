@@ -8,7 +8,16 @@ class Api::V0::MarketsController < ApplicationController
     if @market.class == Market
       render json: MarketSerializer.new(@market)
     else
-      render json: ErrorMarketSerializer.new(@market).not_found, status: 404
+      render json: ErrorMarketSerializer.new(@market).message, status: 404
+    end
+  end
+
+  def search
+    @markets = Market.search(params)
+    if @market.class != ErrorMarket
+      render json: MarketSerializer.new(@markets)
+    else
+      render json: ErrorMarketSerializer.new(@market).message, status: 422
     end
   end
 end
