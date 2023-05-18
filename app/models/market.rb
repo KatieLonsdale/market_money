@@ -12,22 +12,32 @@ class Market < ApplicationRecord
   end
 
   def self.search(params)
-    if params[:state].present? && !params[:state].empty?
-      results = Market.where("state ILIKE ?", "%#{params[:state]}%")
-      if params[:city].present? && !params[:state].empty?
-        results = results.where("city ILIKE ?", "%#{params[:city]}%")
-        if params[:name].present? && !params[:city].empty?
-          results = results.where("name ILIKE ?", "%#{params[:name]}%")
-        end
-      end
-    elsif !params[:state].present? && !params[:city].present?
-      if params[:name].present? && !params[:name].empty?
-        results = Market.where("name ILIKE ?", "%#{params[:name]}%")
-      end
-    else
-      results = ErrorMarket.new("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
+    queries = valid_queries(params)
+    return queries if queries.class == ErrorMarket
+    results = Market.all
+    queries.each do |query|
+      search = query.to_s
+      results = results.where("#{search} ILIKE ?", "%#{params[query]}%")
     end
     results
+  end
+
+  def self.valid_queries(params)
+    if !params[:state].present? && params[:city].present?
+      invalid_params
+    elsif empty_queries?(params)
+      invalid_params
+    else
+      params.keys
+    end
+  end
+
+  def self.empty_queries?(params)
+    params.values.any? {|value| value.empty?}
+  end
+
+  def self.invalid_params
+    ErrorMarket.new("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
   end
 
   def vendor_count
