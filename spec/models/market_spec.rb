@@ -81,6 +81,18 @@ RSpec.describe Market do
         expect(Market.valid_queries(params)).to be_a ErrorMarket
       end
     end
+
+    describe 'empty_queries?' do
+      it 'checks if any queries are empty' do
+        params_1 = ({state: '', city: 'Albuquerque', name: 'Example'})
+        params_2 = ({state: 'New Mexico', city: '', name: 'Example'})
+        params_3 = ({state: 'New Mexico', city: 'Albuquerque', name: 'Example'})
+
+        expect(Market.empty_queries?(params_1)).to be true
+        expect(Market.empty_queries?(params_2)).to be true
+        expect(Market.empty_queries?(params_3)).to be false
+      end
+    end
   end
 
   describe 'instance methods' do
