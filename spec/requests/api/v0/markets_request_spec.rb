@@ -199,7 +199,20 @@ describe 'Markets API' do
       expect(attributes[:address]).to eq("3902 Central Avenue Southeast, Albuquerque, NM 87108")
       expect(attributes[:lat]).to eq(35.079044)
       expect(attributes[:lon]).to eq(-106.60068)
-      # expect(attributes[:distance]).to eq(0.10521432030421865)
+      expect(attributes[:distance]).to eq(169.766658)
+    end
+
+    it 'returns a 404 message if invalid market id is entered' do
+      get "/api/v0/markets/1/nearest_atms"
+
+      expect(response.status).to eq(404)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail])
+      .to eq("Couldn't find Market with 'id'=1")
     end
   end
 end
