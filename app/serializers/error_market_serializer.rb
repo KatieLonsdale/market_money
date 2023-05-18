@@ -3,11 +3,15 @@ class ErrorMarketSerializer
     @error_object = error_object
   end
 
-  def not_found
+  def message
     {
       errors: [
         {detail: @error_object.error_message}
       ]
     }
+  end
+
+  def format_message
+    @error_object.error_message.join(', ')
   end
 end
