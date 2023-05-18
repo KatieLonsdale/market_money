@@ -19,6 +19,47 @@ RSpec.describe Market do
         expect(market.error_message).to eq("Couldn't find Market with 'id'=1")
       end
     end
+
+    describe 'search' do
+      it 'returns an array of markets that meet search criteria' do
+        nm_ab_markets = create_list(:market, 3, city: "Albuquerque", state: "New Mexico")
+        nm_sf_markets = create_list(:market, 1, city: "Santa Fe", state: "New Mexico")
+        co_markets = create_list(:market, 2, state: "Colorado")
+        params = ({state: "New Mexico", city: nm_ab_markets.first.city, name: nm_ab_markets.first.name})
+        expect(Market.search(params)).to eq([nm_ab_markets.first])
+
+        params_2 = ({state: "New Mexico", city: "Albuquerque"})
+        expect(Market.search(params_2)).to eq(nm_ab_markets)
+
+        params_3 = ({state: "New Mexico"})
+        expect(Market.search(params_3)).to eq((nm_ab_markets + nm_sf_markets).flatten)
+
+        params_4 = ({name: nm_sf_markets.first.name.to_s})
+        expect(Market.search(params_4)).to eq([nm_sf_markets.first])
+      end
+      it 'is case insensitive' do
+        market = create(:market, state: 'New Mexico')
+
+        params = ({state: "new Mexico", city: market.city, name: market.name})
+        expect(Market.search(params)).to eq([market])
+      end
+      it 'cannot search city without state' do
+        market = create(:market)
+
+        params = ({city: market.city, name: market.name})
+        expect(Market.search(params)).to be_a ErrorMarket
+
+      end
+      it 'returns an errormarket object if param is blank' do
+        market = create(:market, state: 'New Mexico')
+
+        params = ({city: market.city, name: market.name})
+
+        result = Market.search(params)
+        expect(result).to be_a ErrorMarket
+        expect(result.error_message).to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
+      end
+    end
   end
 
   describe 'instance methods' do
