@@ -93,6 +93,15 @@ RSpec.describe Market do
         expect(Market.empty_queries?(params_3)).to be false
       end
     end
+
+    describe 'invalid_params' do
+      it 'creates an errormarket for invalid params error' do
+        result = Market.invalid_params
+        expect(result).to be_a ErrorMarket
+        expect(result.error_message)
+        .to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
+      end
+    end
   end
 
   describe 'instance methods' do
