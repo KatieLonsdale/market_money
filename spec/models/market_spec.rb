@@ -59,6 +59,12 @@ RSpec.describe Market do
         expect(result).to be_a ErrorMarket
         expect(result.error_message).to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
       end
+      it 'matches a partial search' do
+        market = create(:market, name: "Full Name", state: 'New Mexico', city: 'Albuquerque')
+
+        params = ({city: "Albu", state: "Mexico", name: "Full"})
+        expect(Market.search(params)).to eq([market])
+      end
     end
   end
 
