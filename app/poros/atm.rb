@@ -1,11 +1,13 @@
 class Atm
-  attr_reader :name,
+  attr_reader :id,
+              :name,
               :address,
               :lat,
               :lon,
               :distance
 
   def initialize(data)
+    @id = nil
     @name = 'ATM'
     @address = data.dig(:address, :freeformAddress)
     @lat = data.dig(:position, :lat)
