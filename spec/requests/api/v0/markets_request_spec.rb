@@ -152,9 +152,17 @@ describe 'Markets API' do
 
     end
 
-    xit 'returns a 422 error if search is invalid' do
+    it 'returns a 422 error if search is invalid' do
       get '/api/v0/markets/search?city=albuquerque'
-    end
 
+      expect(response.status).to eq(422)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(data).to have_key(:errors)
+      expect(data[:errors][0]).to have_key(:detail)
+      expect(data[:errors][0][:detail])
+      .to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
+    end
   end
 end
