@@ -6,10 +6,16 @@ class AtmFacade
   end
 
   def closest_atms
-    service = AtmService.new
-    atms = service.nearby_atms(@vendor_id)[:results]
-    atms.map do |atm|
-      Atm.new(atm)
-    end
+    atms = AtmService.nearby_atms(find_lat, find_lon)
+    atms = atms[:results].map!{ |atm| Atm.new(atm) }
+    atms.sort_by{ |atm| atm.distance }
+  end
+
+  def find_lat
+    Market.find(@vendor_id).lat
+  end
+
+  def find_lon
+    Market.find(@vendor_id).lon
   end
 end
