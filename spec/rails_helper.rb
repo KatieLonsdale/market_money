@@ -76,3 +76,77 @@ RSpec.configure do |config|
     end
   end
 end
+
+def mock_atm
+  {
+            "type": "POI",
+            "id": "B5kJ7Zov0IZyyAmdPOvIvQ",
+            "score": 8.7394101607,
+            "dist": 2748.404939,
+            "info": "search:ta:840359000381920-US",
+            "poi": {
+                "name": "Cardtronics",
+                "brands": [
+                    {
+                        "name": "Cardtronics"
+                    }
+                ],
+                "categorySet": [
+                    {
+                        "id": 7397
+                    }
+                ],
+                "categories": [
+                    "cash dispenser"
+                ],
+                "classifications": [
+                    {
+                        "code": "CASH_DISPENSER",
+                        "names": [
+                            {
+                                "nameLocale": "en-US",
+                                "name": "cash dispenser"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "address": {
+                "streetNumber": "820",
+                "streetName": "Route 66",
+                "municipality": "Moriarty",
+                "countrySecondarySubdivision": "Torrance",
+                "countrySubdivision": "NM",
+                "countrySubdivisionName": "New Mexico",
+                "postalCode": "87035",
+                "countryCode": "US",
+                "country": "United States",
+                "countryCodeISO3": "USA",
+                "freeformAddress": "820 Route 66, Moriarty, NM 87035",
+                "localName": "Moriarty"
+            },
+            "position": {
+                "lat": 35.004683,
+                "lon": -106.029628
+            },
+            "viewport": {
+                "topLeftPoint": {
+                    "lat": 35.00558,
+                    "lon": -106.03073
+                },
+                "btmRightPoint": {
+                    "lat": 35.00378,
+                    "lon": -106.02853
+                }
+            },
+            "entryPoints": [
+                {
+                    "type": "main",
+                    "position": {
+                        "lat": 35.00477,
+                        "lon": -106.02936
+                    }
+                }
+            ]
+        }
+end
