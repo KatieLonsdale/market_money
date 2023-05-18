@@ -13,16 +13,16 @@ class Market < ApplicationRecord
 
   def self.search(params)
     if params[:state].present? && !params[:state].empty?
-      results = Market.where('lower(state)=lower(?)', params[:state])
+      results = Market.where("state ILIKE ?", "%#{params[:state]}%")
       if params[:city].present? && !params[:state].empty?
-        results = results.where('lower(city)=lower(?)', params[:city])
-          if params[:name].present? && !params[:city].empty?
-            results = results.where('lower(name)=lower(?)', params[:name])
-          end
+        results = results.where("city ILIKE ?", "%#{params[:city]}%")
+        if params[:name].present? && !params[:city].empty?
+          results = results.where("name ILIKE ?", "%#{params[:name]}%")
+        end
       end
     elsif !params[:state].present? && !params[:city].present?
       if params[:name].present? && !params[:name].empty?
-        results = Market.where('lower(name)=lower(?)', params[:name])
+        results = Market.where("name ILIKE ?", "%#{params[:name]}%")
       end
     else
       results = ErrorMarket.new("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
