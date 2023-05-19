@@ -54,7 +54,33 @@ RSpec.describe Vendor do
   #   end
   # end
 
-  # describe 'instance methods' do
+  describe 'instance methods' do
+    describe 'states_sold_in' do
+      it 'returns an array of the states of the markets it is associated with' do
+        market_1 = create(:market, state: 'California')
+        market_2 = create(:market, state: 'Wisconsin')
+        market_3 = create(:market, state: 'Colorado')
+        vendor_1 = create(:vendor)
+        [market_1, market_2, market_3].each do |market|
+          create(:market_vendor, market_id: market.id, vendor_id: vendor_1.id)
+        end
+
+        expect(vendor_1.states_sold_in).to eq(['California', 'Colorado', 'Wisconsin'])
+      end
+
+      it 'does not return duplicates' do
+        market_1 = create(:market, state: 'California')
+        market_2 = create(:market, state: 'Wisconsin')
+        market_3 = create(:market, state: 'California')
+        vendor_1 = create(:vendor)
+        [market_1, market_2, market_3].each do |market|
+          create(:market_vendor, market_id: market.id, vendor_id: vendor_1.id)
+        end
+
+        expect(vendor_1.states_sold_in).to eq(['California', 'Wisconsin'])
+      end
+    end
+
   #   describe 'update_vendor' do
   #     before(:each) do
   #       @vendor = create(:vendor)
@@ -78,5 +104,5 @@ RSpec.describe Vendor do
   #       expect(vendor.error_message).to eq(["Contact name can't be blank"])
   #     end
   #   end
-  # end
+  end
 end
