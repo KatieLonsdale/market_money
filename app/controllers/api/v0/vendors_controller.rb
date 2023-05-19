@@ -75,10 +75,10 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def render_no_record_response(error)
-    render json: ErrorMarketSerializer.error_message(error.message), status: :not_found
+    render json: ErrorSerializer.error_message(error.message), status: :not_found
   end
 
   def render_record_invalid(error)
-    render json: ErrorMarketSerializer.error_message(error.message), status: :bad_request
+    render json: ErrorSerializer.error_message(error.message), status: :bad_request
   end
 end
