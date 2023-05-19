@@ -1,5 +1,14 @@
 class Api::V0::MarketVendorsController < ApplicationController
+  # rescue_from ActiveRecord::RecordNotFound, with: :render_no_record_response
+  # rescue_from ActiveRecord::RecordNotUnique, with: :render_record_not_unique
+  rescue_from ActiveRecord::RecordInvalid, with: :render_record_invalid
+
+
   def create
+    # @mv = MarketVendor.create!(market_vendor_params)
+    # @mv.save
+    # render json: successful_creation_message, status: 201
+
     @mv = MarketVendor.new(market_vendor_params)
     if @mv.save
       render json: successful_creation_message, status: 201
@@ -11,6 +20,9 @@ class Api::V0::MarketVendorsController < ApplicationController
   end
 
   def destroy
+    # @mv = MarketVendor.find_mv(params[:market_vendor])
+    # @mv.destroy
+
     @mv = MarketVendor.find_mv(params[:market_vendor])
     if @mv.class == MarketVendor
       @mv.destroy
@@ -27,4 +39,16 @@ class Api::V0::MarketVendorsController < ApplicationController
   def successful_creation_message
     {message: "Successfully added vendor to market"}
   end
+
+  # def render_record_invalid(error)
+  #   render json: ErrorSerializer.error_message(error.message), status: :bad_request
+  # end
+
+  # def render_no_record_response(error)
+  #   render json: ErrorSerializer.error_message(error.message), status: :not_found
+  # end
+
+  # def render_record_not_unique(error)
+  #   render json: ErrorSerializer.error_message(error.message), status: :unprocessable_entity
+  # end
 end
