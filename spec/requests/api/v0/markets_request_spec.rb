@@ -114,7 +114,7 @@ describe 'Markets API' do
 
       get "/api/v0/markets/search?city=albuquerque&state=new Mexico&name=Nob hill"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       markets = data[:data]
@@ -124,7 +124,7 @@ describe 'Markets API' do
       market = markets[0]
 
       expect(market).to have_key(:id)
-      expect(market[:id]).to be_a(String)
+      expect(market[:id]).to eq(market_1.id.to_s)
       expect(market).to have_key(:type)
       expect(market[:type]).to eq("market")
       
@@ -164,7 +164,6 @@ describe 'Markets API' do
       get "/api/v0/markets/#{market.id}/nearest_atms"
 
       expect(response.status).to eq(200)
-      # expect(response).to be_successful
 
       data = JSON.parse(response.body, symbolize_names: true)
       atms = data[:data]
