@@ -6,7 +6,6 @@ class Vendor < ApplicationRecord
                         :description, 
                         :contact_name, 
                         :contact_phone
-  validates :credit_accepted, inclusion: [true, false]
   validates :credit_accepted, exclusion: [nil]
 
   # def self.find_vendor(id)
