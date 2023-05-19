@@ -5,12 +5,14 @@ RSpec.describe 'Vendors API' do
     it 'returns all vendors for a given market' do
       market_1 = create(:market)
       market_2 = create(:market)
-      m1_vendors = create_list(:market_vendor, 4, market_id: market_1.id)
+      vendor_1 = create(:vendor)
+      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_1.id)
+      m1_vendors = create_list(:market_vendor, 3, market_id: market_1.id)
       m2_vendors = create_list(:market_vendor, 2, market_id: market_2.id)
 
       get "/api/v0/markets/#{market_1.id}/vendors"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendors = data[:data]
@@ -18,26 +20,25 @@ RSpec.describe 'Vendors API' do
 
       vendors.each do |vendor|
         expect(vendor).to have_key(:id)
-        expect(vendor[:id]).to be_a(String)
         expect(vendor).to have_key(:type)
-        expect(vendor[:type]).to be_a(String)
         
         attributes = vendor[:attributes]
         expect(attributes).to have_key(:name)
-        expect(attributes[:name]).to be_a(String)
-
         expect(attributes).to have_key(:description)
-        expect(attributes[:description]).to be_a(String)
-
         expect(attributes).to have_key(:contact_name)
-        expect(attributes[:contact_name]).to be_a(String)
-
         expect(attributes).to have_key(:contact_phone)
-        expect(attributes[:contact_phone]).to be_a(String)
-
         expect(attributes).to have_key(:credit_accepted)
         expect(attributes[:credit_accepted]).to be_in([true, false])
       end
+      
+      vendor = vendors.first
+      attributes = vendor[:attributes]
+
+      expect(attributes[:name]).to eq(vendor_1.name)
+      expect(attributes[:description]).to eq(vendor_1.description)
+      expect(attributes[:contact_name]).to eq(vendor_1.contact_name)
+      expect(attributes[:contact_phone]).to eq(vendor_1.contact_phone)
+      expect(attributes[:credit_accepted]).to eq(vendor_1.credit_accepted)
     end
     it 'sends 404 message if invalid market id is passed in' do
       get "/api/v0/markets/1/vendors"
@@ -59,7 +60,7 @@ RSpec.describe 'Vendors API' do
 
       get "/api/v0/vendors/#{vendor_1.id}"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendor = data[:data]
@@ -67,27 +68,24 @@ RSpec.describe 'Vendors API' do
       expect(data.count).to eq(1)
 
       expect(vendor).to have_key(:id)
-      expect(vendor[:id]).to be_a(String)
-
       expect(vendor).to have_key(:type)
-      expect(vendor[:type]).to be_a(String)
 
       attributes = vendor[:attributes]
 
       expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
+      expect(attributes[:name]).to eq(vendor_1.name)
 
       expect(attributes).to have_key(:description)
-      expect(attributes[:description]).to be_a(String)
+      expect(attributes[:description]).to eq(vendor_1.description)
 
       expect(attributes).to have_key(:contact_name)
-      expect(attributes[:contact_name]).to be_a(String)
+      expect(attributes[:contact_name]).to eq(vendor_1.contact_name)
 
       expect(attributes).to have_key(:contact_phone)
-      expect(attributes[:contact_phone]).to be_a(String)
+      expect(attributes[:contact_phone]).to eq(vendor_1.contact_phone)
 
       expect(attributes).to have_key(:credit_accepted)
-      expect(attributes[:credit_accepted]).to be_in([true, false])
+      expect(attributes[:credit_accepted]).to eq(vendor_1.credit_accepted)
     end
 
     it 'sends 404 message if invalid vendor id is passed in' do
@@ -124,7 +122,7 @@ RSpec.describe 'Vendors API' do
       expect(new_vendor.contact_phone).to eq(vendor_params[:contact_phone])
       expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
 
-      expect(response).to be_successful
+      expect(response.status).to eq(201)
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendor = data[:data]
@@ -132,27 +130,24 @@ RSpec.describe 'Vendors API' do
       expect(data.count).to eq(1)
 
       expect(vendor).to have_key(:id)
-      expect(vendor[:id]).to be_a(String)
-
       expect(vendor).to have_key(:type)
-      expect(vendor[:type]).to be_a(String)
 
       attributes = vendor[:attributes]
 
       expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
+      expect(attributes[:name]).to eq(new_vendor.name)
 
       expect(attributes).to have_key(:description)
-      expect(attributes[:description]).to be_a(String)
+      expect(attributes[:description]).to eq(new_vendor.description)
 
       expect(attributes).to have_key(:contact_name)
-      expect(attributes[:contact_name]).to be_a(String)
+      expect(attributes[:contact_name]).to eq(new_vendor.contact_name)
 
       expect(attributes).to have_key(:contact_phone)
-      expect(attributes[:contact_phone]).to be_a(String)
+      expect(attributes[:contact_phone]).to eq(new_vendor.contact_phone)
 
       expect(attributes).to have_key(:credit_accepted)
-      expect(attributes[:credit_accepted]).to be_in([true, false])
+      expect(attributes[:credit_accepted]).to eq(new_vendor.credit_accepted)
     end
 
     it 'returns an error 400 message if not all attributes are provided in request' do
@@ -187,7 +182,7 @@ RSpec.describe 'Vendors API' do
 
       patch "/api/v0/vendors/#{vendor_1.id}", headers: headers, params: JSON.generate(vendor: vendor_params)
       
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendor = data[:data]
@@ -195,24 +190,21 @@ RSpec.describe 'Vendors API' do
       expect(data.count).to eq(1)
 
       expect(vendor).to have_key(:id)
-      expect(vendor[:id]).to be_a(String)
-
       expect(vendor).to have_key(:type)
-      expect(vendor[:type]).to be_a(String)
 
       attributes = vendor[:attributes]
 
       expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
+      expect(attributes[:name]).to eq(vendor_1.name)
 
       expect(attributes).to have_key(:description)
-      expect(attributes[:description]).to be_a(String)
+      expect(attributes[:description]).to eq(vendor_1.description)
 
       expect(attributes).to have_key(:contact_name)
       expect(attributes[:contact_name]).to eq("Kimberly Couwer")
 
       expect(attributes).to have_key(:contact_phone)
-      expect(attributes[:contact_phone]).to be_a(String)
+      expect(attributes[:contact_phone]).to eq(vendor_1.contact_phone)
 
       expect(attributes).to have_key(:credit_accepted)
       expect(attributes[:credit_accepted]).to eq(false)
@@ -257,7 +249,7 @@ RSpec.describe 'Vendors API' do
       create(:market_vendor, vendor_id: vendor_1.id)
       delete "/api/v0/vendors/#{vendor_1.id}"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(204)
       expect(Vendor.all.count).to eq(0)
       expect(MarketVendor.all.count).to eq(0)
       expect(Market.all.count).to eq(1)
