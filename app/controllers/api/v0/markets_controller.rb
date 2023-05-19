@@ -6,12 +6,12 @@ class Api::V0::MarketsController < ApplicationController
   end
   
   def show
-    @market = Market.find_market(params[:id])
-    if @market.class == Market
-      render json: MarketSerializer.new(@market)
-    else
-      render json: ErrorMarketSerializer.new(@market).message, status: 404
-    end
+    @market = Market.find(params[:id])
+    # if @market.class == Market
+    render json: MarketSerializer.new(@market)
+    # else
+      # render json: ErrorMarketSerializer.new(@market).message, status: 404
+    # end
   end
   
   def search
@@ -25,7 +25,7 @@ class Api::V0::MarketsController < ApplicationController
   
   def nearest_atms
     @atms = AtmFacade.new(params[:id]).closest_atms
-    response = render json: AtmSerializer.new(@atms)
+    render json: AtmSerializer.new(@atms)
   end
   
   private
@@ -34,6 +34,6 @@ class Api::V0::MarketsController < ApplicationController
   end
 
   def render_no_record_response(error)
-    render json: {"errors": [{ detail: error.message }]}, status: :not_found
+    render json: ErrorSerializer.error_message(error.message), status: :not_found
   end
 end
