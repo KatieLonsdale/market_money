@@ -99,6 +99,22 @@ RSpec.describe 'Vendors API' do
       expect(data[:errors][0]).to have_key(:detail)
       expect(data[:errors][0][:detail]).to eq("Couldn't find Vendor with 'id'=1")
     end
+
+    it 'lists the states the vendor sells in' do
+      vendor_1 = create(:vendor)
+      create_list(:market_vendor, 3, vendor_id: vendor_1.id,)
+
+      get "/api/v0/vendors/#{vendor_1.id}"
+
+      expect(response.status).to eq(200)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      vendor = data.dig(:data, :attributes)
+
+      expect(vendor).to have_key(:states_sold_in)
+      expect(vendor[:states_sold_in]).to be_a(Array)
+      expect(vendor[:states_sold_in]).to eq(vendor_1.states_sold_in)
+    end
   end
 
   describe 'create a vendor' do
