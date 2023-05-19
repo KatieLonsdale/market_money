@@ -68,6 +68,11 @@ class Api::V0::VendorsController < ApplicationController
     # end
   end
 
+  def multiple_states
+    @vendors = Vendor.multiple_states
+    render json: VendorSerializer(@vendors)
+  end
+
   private
 
   def vendor_params
