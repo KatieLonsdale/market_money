@@ -3,7 +3,8 @@ require 'rails_helper'
 describe 'Markets API' do
   describe 'all markets' do
     it 'sends a list of all markets' do
-      create_list(:market, 4)
+      all_markets = create_list(:market, 4)
+      market_1 = all_markets.first
       
       get '/api/v0/markets'
 
@@ -50,6 +51,19 @@ describe 'Markets API' do
         expect(attributes).to have_key(:vendor_count)
         expect(attributes[:vendor_count]).to be_a(Integer)
       end
+
+      market = markets.first
+      attributes = market[:attributes]
+
+      expect(attributes[:name]).to eq(market_1.name)
+      expect(attributes[:street]).to eq(market_1.street)
+      expect(attributes[:city]).to eq(market_1.city)
+      expect(attributes[:county]).to eq(market_1.county)
+      expect(attributes[:state]).to eq(market_1.state)
+      expect(attributes[:zip]).to eq(market_1.zip)
+      expect(attributes[:lat]).to eq(market_1.lat)
+      expect(attributes[:lon]).to eq(market_1.lon)
+      expect(attributes[:vendor_count]).to eq(market_1.vendor_count)
     end
   end
 
