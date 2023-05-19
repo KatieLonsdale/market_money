@@ -26,6 +26,10 @@ class Vendor < ApplicationRecord
   #   end
   # end
 
+  def states_sold_in
+    markets.select(:state).distinct.order(:state).pluck(:state)
+  end
+
   # def update_vendor(params)
   #   if update(params)
   #     self
