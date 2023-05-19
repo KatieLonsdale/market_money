@@ -282,4 +282,49 @@ RSpec.describe 'Vendors API' do
       expect(data[:errors][0][:detail]).to eq("Couldn't find Vendor with 'id'=1")
     end
   end
+
+  describe 'multiple states' do
+    it 'returns all vendors that sell in more than one state' do
+      vendor_1 = create(:vendor)
+      vendor_2 = create(:vendor)
+      vendor_3 = create(:vendor)
+      market_1 = create(:market, state: 'California')
+      market_2 = create(:market, state: 'Colorado')
+      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_1.id)
+      create(:market_vendor, vendor_id: vendor_2.id, market_id: market_1.id)
+      create(:market_vendor, vendor_id: vendor_3.id, market_id: market_1.id)
+      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_2.id)
+      create(:market_vendor, vendor_id: vendor_2.id, market_id: market_2.id)
+
+      get '/api/v0/vendors/multiple_states'
+
+      expect(response.status).to eq(200)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      vendors = data[:data]
+      
+      expect(data).to have_key(:results)
+      expect(data[:results]).to eq(2)
+
+      attributes = [:name, :description, :contact_name, :contact_phone, :credit_accepted, :states_sold_in]
+      vendors.each do |vendor|
+        expect(vendor).to have_key(:id)
+        expect(vendor).to have_key(:type)
+        expect(vendor[:type]).to eq("vendor")
+
+        attributes.each do |attribute|
+          expect(vendor[:attributes]).to have_key(attribute)
+        end
+      end
+
+      vendor = vendors.first
+      vendor_attributes = vendor[:attributes]
+      expect(vendor_attributes[:name]).to eq(vendor_1.name)
+      expect(vendor_attributes[:description]).to eq(vendor_1.description)
+      expect(vendor_attributes[:contact_name]).to eq(vendor_1.contact_name)
+      expect(vendor_attributes[:contact_phone]).to eq(vendor_1.contact_phone)
+      expect(vendor_attributes[:credit_accepted]).to eq(vendor_1.credit_accepted)
+      expect(vendor_attributes[:states_sold_in]).to eq(vendor_1.states_sold_in)
+    end
+  end
 end
