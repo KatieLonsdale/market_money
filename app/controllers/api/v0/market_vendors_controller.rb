@@ -1,7 +1,7 @@
 class Api::V0::MarketVendorsController < ApplicationController
   # rescue_from ActiveRecord::RecordNotFound, with: :render_no_record_response
   # rescue_from ActiveRecord::RecordNotUnique, with: :render_record_not_unique
-  rescue_from ActiveRecord::RecordInvalid, with: :render_record_invalid
+  # rescue_from ActiveRecord::RecordInvalid, with: :render_record_invalid
 
 
   def create
