@@ -3,64 +3,58 @@ require 'rails_helper'
 describe 'Markets API' do
   describe 'all markets' do
     it 'sends a list of all markets' do
-      create_list(:market, 4)
+      all_markets = create_list(:market, 4)
+      market_1 = all_markets.first
       
       get '/api/v0/markets'
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       markets = data[:data]
-
 
       expect(markets.count).to eq 4
 
       markets.each do |market|
         expect(market).to have_key(:id)
-        expect(market[:id]).to be_a(String)
         expect(market).to have_key(:type)
-        expect(market[:type]).to be_a(String)
         
         attributes = market[:attributes]
 
         expect(attributes).to have_key(:name)
-        expect(attributes[:name]).to be_a(String)
-
         expect(attributes).to have_key(:street)
-        expect(attributes[:street]).to be_a(String)
-
         expect(attributes).to have_key(:city)
-        expect(attributes[:city]).to be_a(String)
-
         expect(attributes).to have_key(:county)
-        expect(attributes[:county]).to be_a(String)
-
         expect(attributes).to have_key(:state)
-        expect(attributes[:state]).to be_a(String)
-
         expect(attributes).to have_key(:zip)
-        expect(attributes[:zip]).to be_a(String)
-
         expect(attributes).to have_key(:lat)
-        expect(attributes[:lat]).to be_a(String)
-
         expect(attributes).to have_key(:lon)
-        expect(attributes[:lon]).to be_a(String)
-
         expect(attributes).to have_key(:vendor_count)
-        expect(attributes[:vendor_count]).to be_a(Integer)
       end
+
+      market = markets.first
+      attributes = market[:attributes]
+
+      expect(attributes[:name]).to eq(market_1.name)
+      expect(attributes[:street]).to eq(market_1.street)
+      expect(attributes[:city]).to eq(market_1.city)
+      expect(attributes[:county]).to eq(market_1.county)
+      expect(attributes[:state]).to eq(market_1.state)
+      expect(attributes[:zip]).to eq(market_1.zip)
+      expect(attributes[:lat]).to eq(market_1.lat)
+      expect(attributes[:lon]).to eq(market_1.lon)
+      expect(attributes[:vendor_count]).to eq(market_1.vendor_count)
     end
   end
 
   describe 'get one market' do
     it 'sends all market attributes if valid id is passed in' do
-      markets = create_list(:market, 3)
-      market = markets.first
+      all_markets = create_list(:market, 3)
+      market_1 = all_markets.first
 
-      get "/api/v0/markets/#{market.id}"
+      get "/api/v0/markets/#{market_1.id}"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       market = data[:data]
@@ -68,38 +62,36 @@ describe 'Markets API' do
       expect(data.count).to eq 1
 
       expect(market).to have_key(:id)
-      expect(market[:id]).to be_a(String)
       expect(market).to have_key(:type)
-      expect(market[:type]).to be_a(String)
       
       attributes = market[:attributes]
 
       expect(attributes).to have_key(:name)
-      expect(attributes[:name]).to be_a(String)
+      expect(attributes[:name]).to eq(market_1.name)
 
       expect(attributes).to have_key(:street)
-      expect(attributes[:street]).to be_a(String)
+      expect(attributes[:street]).to eq(market_1.street)
 
       expect(attributes).to have_key(:city)
-      expect(attributes[:city]).to be_a(String)
+      expect(attributes[:city]).to eq(market_1.city)
 
       expect(attributes).to have_key(:county)
-      expect(attributes[:county]).to be_a(String)
+      expect(attributes[:county]).to eq(market_1.county)
 
       expect(attributes).to have_key(:state)
-      expect(attributes[:state]).to be_a(String)
+      expect(attributes[:state]).to eq(market_1.state)
 
       expect(attributes).to have_key(:zip)
-      expect(attributes[:zip]).to be_a(String)
+      expect(attributes[:zip]).to eq(market_1.zip)
 
       expect(attributes).to have_key(:lat)
-      expect(attributes[:lat]).to be_a(String)
+      expect(attributes[:lat]).to eq(market_1.lat)
 
       expect(attributes).to have_key(:lon)
-      expect(attributes[:lon]).to be_a(String)
+      expect(attributes[:lon]).to eq(market_1.lon)
 
       expect(attributes).to have_key(:vendor_count)
-      expect(attributes[:vendor_count]).to be_a(Integer)
+      expect(attributes[:vendor_count]).to eq(market_1.vendor_count)
     end
 
     it 'sends custom 404 message if invalid market id is passed in' do
@@ -122,7 +114,7 @@ describe 'Markets API' do
 
       get "/api/v0/markets/search?city=albuquerque&state=new Mexico&name=Nob hill"
 
-      expect(response).to be_successful
+      expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       markets = data[:data]
@@ -132,7 +124,7 @@ describe 'Markets API' do
       market = markets[0]
 
       expect(market).to have_key(:id)
-      expect(market[:id]).to be_a(String)
+      expect(market[:id]).to eq(market_1.id.to_s)
       expect(market).to have_key(:type)
       expect(market[:type]).to eq("market")
       
@@ -172,7 +164,6 @@ describe 'Markets API' do
       get "/api/v0/markets/#{market.id}/nearest_atms"
 
       expect(response.status).to eq(200)
-      # expect(response).to be_successful
 
       data = JSON.parse(response.body, symbolize_names: true)
       atms = data[:data]

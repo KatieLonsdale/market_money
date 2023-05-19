@@ -13,7 +13,7 @@ RSpec.describe 'Market Vendors API' do
 
       post '/api/v0/market_vendors', headers: headers, params: JSON.generate(market_vendor: mv_params)
 
-      expect(response).to be_successful
+      expect(response.body).to eq(201)
 
       data = JSON.parse(response.body, symbolize_names: true)
 
@@ -100,7 +100,7 @@ RSpec.describe 'Market Vendors API' do
       
       delete '/api/v0/market_vendors', headers: headers, params: JSON.generate(market_vendor: mv_params)
 
-      expect(response).to be_successful
+      expect(response.status).to eq(204)
 
       expect(MarketVendor.all.count).to eq(0)
       expect(Market.all.count).to eq(1)
