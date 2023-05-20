@@ -26,6 +26,17 @@ class Vendor < ApplicationRecord
   #   end
   # end
 
+  # def self.multiple_states
+  #   Vendor.from(Vendor.joins(:markets).select('vendors.*, count(markets.state) AS states').group('vendors.id').order('count(markets.state) DESC').distinct).where('states > 1')
+  # end
+
+  def self.popular_states
+    Vendor.joins(:market_vendors, :markets)
+          .select('markets.state AS name, count(market_vendors.id AS number_of_vendors)')
+          .group('markets.state')
+          .count('market_vendors.id')
+  end
+
   def states_sold_in
     markets.select(:state).distinct.order(:state).pluck(:state)
   end
