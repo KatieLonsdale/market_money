@@ -41,13 +41,13 @@ RSpec.describe Vendor do
         market_3 = create(:market, state: 'Colorado')
         market_4 = create(:market, state: 'Idaho')
         market_5 = create(:market, state: 'California')
-        create_list(:market_vendor, 3, market_id: market_1.id)
-        create_list(:market_vendor, 2, market_id: market_5.id)
-        create_list(:market_vendor, 2, market_id: market_2.id)
+        create_list(:market_vendor, 3, market_id: market_2.id)
         create_list(:market_vendor, 2, market_id: market_3.id)
+        create_list(:market_vendor, 2, market_id: market_1.id)
+        create_list(:market_vendor, 2, market_id: market_5.id)
         create_list(:market_vendor, 1, market_id: market_4.id)
 
-        expect(Vendor.popular_states).to eq({'California' => 5, 'Colorado' => 4, 'Idaho' => 1})
+        expect(Vendor.popular_states).to eq({'Colorado' => 5, 'California' => 4, 'Idaho' => 1})
       end
     end
   #   describe 'find_vendor' do
