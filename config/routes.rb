@@ -6,8 +6,9 @@ Rails.application.routes.draw do
 
   get '/api/v0/markets/search', to: 'api/v0/markets#search'
   get '/api/v0/markets/:id/nearest_atms', to: 'api/v0/markets#nearest_atms'
-
+  
   get '/api/v0/vendors/multiple_states', to: 'api/v0/vendors#multiple_states'
+  get '/api/v0/vendors/popular_states', to: 'api/v0/vendors#popular_states'
   
   namespace :api do
     namespace :v0 do
