@@ -14,7 +14,42 @@ RSpec.describe Vendor do
     it { should validate_exclusion_of(:credit_accepted).in_array([nil]) }
   end
 
-  # describe 'class methods' do
+  describe 'class methods' do
+    # describe 'multiple_states' do
+    #   before(:each) do
+    #     @vendor_1 = create(:vendor)
+    #     @vendor_2 = create(:vendor)
+    #     @vendor_3 = create(:vendor)
+    #     @market_1 = create(:market, state: 'California')
+    #     @market_2 = create(:market, state: 'Colorado')
+    #     @market_3 = create(:market, state: 'Nevada')
+    #     create(:market_vendor, vendor_id: @vendor_1.id, market_id: @market_1.id)
+    #     create(:market_vendor, vendor_id: @vendor_2.id, market_id: @market_1.id)
+    #     create(:market_vendor, vendor_id: @vendor_3.id, market_id: @market_1.id)
+    #     create(:market_vendor, vendor_id: @vendor_1.id, market_id: @market_2.id)
+    #     create(:market_vendor, vendor_id: @vendor_2.id, market_id: @market_2.id)
+    #     create(:market_vendor, vendor_id: @vendor_2.id, market_id: @market_3.id)
+    #   end
+    #   it 'returns an array of vendors that are in markets in multiple states' do
+    #     expect(Vendor.multiple_states).to eq([@vendor_2, @vendor_1])
+    #   end
+    # end
+    describe 'popular_states' do
+      it 'returns a hash of state name and number of vendors who sell there ordered by popularity' do
+        market_1 = create(:market, state: 'California')
+        market_2 = create(:market, state: 'Colorado')
+        market_3 = create(:market, state: 'Colorado')
+        market_4 = create(:market, state: 'Idaho')
+        market_5 = create(:market, state: 'California')
+        create_list(:market_vendor, 3, market_id: market_1.id)
+        create_list(:market_vendor, 2, market_id: market_5.id)
+        create_list(:market_vendor, 2, market_id: market_2.id)
+        create_list(:market_vendor, 2, market_id: market_3.id)
+        create_list(:market_vendor, 1, market_id: market_4.id)
+
+        expect(Vendor.popular_states).to eq({'California' => 5, 'Colorado' => 4, 'Idaho' => 1})
+      end
+    end
   #   describe 'find_vendor' do
   #     it 'returns a vendor if id is valid' do
   #       vendor = create(:vendor)
@@ -52,7 +87,7 @@ RSpec.describe Vendor do
   #       expect(vendor.error_message).to eq(["Contact name can't be blank", "Contact phone can't be blank"])
   #     end
   #   end
-  # end
+  end
 
   describe 'instance methods' do
     describe 'states_sold_in' do
