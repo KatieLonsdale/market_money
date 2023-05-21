@@ -39,7 +39,7 @@ class Vendor < ApplicationRecord
 
   def self.sells_in(state)
     Vendor.joins(:market_vendors, :markets)
-          .where('markets.state=?', state)
+          .where('markets.state ILIKE ?', "%#{state}%")
           .select('vendors.*, count(market_vendors.id)')
           .group('vendors.id')
           .order('count(market_vendors.id) DESC')
