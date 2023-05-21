@@ -33,6 +33,7 @@ class Vendor < ApplicationRecord
   def self.popular_states
     Vendor.joins(:market_vendors, :markets)
           .select('markets.state, count(market_vendors.id)')
+          .order('count(market_vendors.id) DESC')
           .group('markets.state')
           .count('market_vendors.id')
   end
