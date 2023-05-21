@@ -50,6 +50,34 @@ RSpec.describe Vendor do
         expect(Vendor.popular_states).to eq({'Colorado' => 5, 'California' => 4, 'Idaho' => 1})
       end
     end
+    describe 'sells_in' do
+      it 'returns an array of vendors that sell in a given state, sorted by popularity' do
+        # 1 CO markets
+        vendor_1 = create(:vendor)
+        # 2 CO markets, 2 California markets - should not affect rankings
+        vendor_2 = create(:vendor)
+        # 3 CO market
+        vendor_3 = create(:vendor)
+        # no CO markets - should not appear
+        vendor_4 = create(:vendor)
+        market_1 = create(:market, state: 'California')
+        market_2 = create(:market, state: 'Colorado')
+        market_3 = create(:market, state: 'Colorado')
+        market_4 = create(:market, state: 'California')
+        market_5 = create(:market, state: 'Colorado')
+        [vendor_1, vendor_2, vendor_3].each do |vendor|
+          create(:market_vendor, vendor_id: vendor.id, market_id: market_2.id)
+        end
+        create(:market_vendor, vendor_id: vendor_3.id, market_id: market_3.id)
+        create(:market_vendor, vendor_id: vendor_2.id, market_id: market_3.id)
+        create(:market_vendor, vendor_id: vendor_3.id, market_id: market_5.id)
+        create(:market_vendor, vendor_id: vendor_2.id, market_id: market_1.id)
+        create(:market_vendor, vendor_id: vendor_2.id, market_id: market_4.id)
+        create(:market_vendor, vendor_id: vendor_4.id, market_id: market_4.id)
+
+        expect(Vendor.sells_in('Colorado')).to eq([vendor_3, vendor_2, vendor_1])
+      end
+    end
   #   describe 'find_vendor' do
   #     it 'returns a vendor if id is valid' do
   #       vendor = create(:vendor)
