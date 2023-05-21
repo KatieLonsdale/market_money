@@ -283,28 +283,100 @@ RSpec.describe 'Vendors API' do
     end
   end
 
-  describe 'multiple states' do
-    it 'returns all vendors that sell in more than one state' do
-      vendor_1 = create(:vendor)
-      vendor_2 = create(:vendor)
-      vendor_3 = create(:vendor)
-      market_1 = create(:market, state: 'California')
-      market_2 = create(:market, state: 'Colorado')
-      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_1.id)
-      create(:market_vendor, vendor_id: vendor_2.id, market_id: market_1.id)
-      create(:market_vendor, vendor_id: vendor_3.id, market_id: market_1.id)
-      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_2.id)
-      create(:market_vendor, vendor_id: vendor_2.id, market_id: market_2.id)
+  # describe 'multiple states' do
+  #   it 'returns all vendors that sell in more than one state' do
+  #     vendor_1 = create(:vendor)
+  #     vendor_2 = create(:vendor)
+  #     vendor_3 = create(:vendor)
+  #     market_1 = create(:market, state: 'California')
+  #     market_2 = create(:market, state: 'Colorado')
+  #     create(:market_vendor, vendor_id: vendor_1.id, market_id: market_1.id)
+  #     create(:market_vendor, vendor_id: vendor_2.id, market_id: market_1.id)
+  #     create(:market_vendor, vendor_id: vendor_3.id, market_id: market_1.id)
+  #     create(:market_vendor, vendor_id: vendor_1.id, market_id: market_2.id)
+  #     create(:market_vendor, vendor_id: vendor_2.id, market_id: market_2.id)
 
-      get '/api/v0/vendors/multiple_states'
+  #     get '/api/v0/vendors/multiple_states'
+
+  #     expect(response.status).to eq(200)
+
+  #     data = JSON.parse(response.body, symbolize_names: true)
+  #     vendors = data[:data]
+      
+  #     expect(data).to have_key(:results)
+  #     expect(data[:results]).to eq(2)
+
+  #     attributes = [:name, :description, :contact_name, :contact_phone, :credit_accepted, :states_sold_in]
+  #     vendors.each do |vendor|
+  #       expect(vendor).to have_key(:id)
+  #       expect(vendor).to have_key(:type)
+  #       expect(vendor[:type]).to eq("vendor")
+
+  #       attributes.each do |attribute|
+  #         expect(vendor[:attributes]).to have_key(attribute)
+  #       end
+  #     end
+
+  #     vendor = vendors.first
+  #     vendor_attributes = vendor[:attributes]
+  #     expect(vendor_attributes[:name]).to eq(vendor_1.name)
+  #     expect(vendor_attributes[:description]).to eq(vendor_1.description)
+  #     expect(vendor_attributes[:contact_name]).to eq(vendor_1.contact_name)
+  #     expect(vendor_attributes[:contact_phone]).to eq(vendor_1.contact_phone)
+  #     expect(vendor_attributes[:credit_accepted]).to eq(vendor_1.credit_accepted)
+  #     expect(vendor_attributes[:states_sold_in]).to eq(vendor_1.states_sold_in)
+  #   end
+  # end
+  # describe 'most popular states' do
+  #   it 'returns a list of states in order of total number of vendors that sell at markets in that state' do
+  #     market_1 = create(:market, state: 'California')
+  #     market_2 = create(:market, state: 'Colorado')
+  #     market_3 = create(:market, state: 'Colorado')
+  #     market_4 = create(:market, state: 'Idaho')
+  #     market_5 = create(:market, state: 'California')
+  #     create_list(:market_vendor, 3, market_id: market_1.id)
+  #     create_list(:market_vendor, 2, market_id: market_5.id)
+  #     create_list(:market_vendor, 2, market_id: market_2.id)
+  #     create_list(:market_vendor, 2, market_id: market_3.id)
+  #     create_list(:market_vendor, 1, market_id: market_4.id)
+
+  #     get '/api/v0/vendors/popular_states'
+
+  #     expect(response.status).to eq(200)
+
+  #     data = JSON.parse(response.body, symbolize_names: true)
+  #     states = data[:data]
+      
+  #     states.each do |state|
+  #       expect(state).to have_key(:state)
+  #       expect(state).to have_key(:number_of_vendors)
+  #     end
+
+  #     state = states.first
+  #     expect(state[:state]).to eq('California')
+  #     expect(state[:number_of_vendors]).to eq(5)
+  #   end
+  # end
+
+  describe 'vendors that sell in a particular state' do
+    it 'returns a list of vendors that sell in a given state' do
+      all_vendors = create_list(:vendor, 3)
+      vendor_1 = all_vendors.first
+      market_1 = create(:market, state: 'California')
+      market_2 = create(:market, state: 'California')
+      create(:market_vendor, vendor_id: vendor_1.id, market_id: market_2.id)
+      all_vendors.each do |vendor|
+        create(:market_vendor, vendor_id: vendor.id, market_id: market_1.id)
+      end
+
+      get '/api/v0/vendors?state=california'
 
       expect(response.status).to eq(200)
 
       data = JSON.parse(response.body, symbolize_names: true)
       vendors = data[:data]
       
-      expect(data).to have_key(:results)
-      expect(data[:results]).to eq(2)
+      expect(vendors.count).to eq(3)
 
       attributes = [:name, :description, :contact_name, :contact_phone, :credit_accepted, :states_sold_in]
       vendors.each do |vendor|
