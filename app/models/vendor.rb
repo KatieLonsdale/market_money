@@ -32,9 +32,17 @@ class Vendor < ApplicationRecord
 
   def self.popular_states
     Vendor.joins(:market_vendors, :markets)
-          .select('markets.state AS name, count(market_vendors.id AS number_of_vendors)')
+          .select('markets.state, count(market_vendors.id)')
           .group('markets.state')
           .count('market_vendors.id')
+  end
+
+  def self.sells_in(state)
+    Vendor.joins(:market_vendors, :markets)
+          .where('markets.state=?', state)
+          .select('vendors.*, count(market_vendors.id)')
+          .group('vendors.id')
+          .order('count(market_vendors.id) DESC')
   end
 
   def states_sold_in
