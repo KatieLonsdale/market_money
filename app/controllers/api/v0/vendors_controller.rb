@@ -73,6 +73,18 @@ class Api::V0::VendorsController < ApplicationController
     render json: VendorSerializer(@vendors)
   end
 
+  # def popular_states
+  #   @states = Vendor.popular_states
+  #   @states.map do |name, count|
+  #     render json: State.new(name, count)
+  #   end
+  # end
+
+  def search
+    @vendors = Vendor.sells_in(params[:state])
+    render json: VendorSerializer.new(@vendors)
+  end
+
   private
 
   def vendor_params
