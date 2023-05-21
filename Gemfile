@@ -43,6 +43,9 @@ gem 'simplecov', require: false, group: :test
 gem 'faraday'
 gem 'figaro'
 
+# Serializer for PORO
+gem 'active_model_serializers', '~> 0.10.0'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]

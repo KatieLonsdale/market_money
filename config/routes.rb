@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   
   get '/api/v0/vendors/multiple_states', to: 'api/v0/vendors#multiple_states'
   get '/api/v0/vendors/popular_states', to: 'api/v0/vendors#popular_states'
+  get '/api/v0/vendors', to: 'api/v0/vendors#search'
+
   
   namespace :api do
     namespace :v0 do
