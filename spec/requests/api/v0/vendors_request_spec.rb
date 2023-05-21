@@ -327,36 +327,36 @@ RSpec.describe 'Vendors API' do
   #     expect(vendor_attributes[:states_sold_in]).to eq(vendor_1.states_sold_in)
   #   end
   # end
-  # describe 'most popular states' do
-  #   it 'returns a list of states in order of total number of vendors that sell at markets in that state' do
-  #     market_1 = create(:market, state: 'California')
-  #     market_2 = create(:market, state: 'Colorado')
-  #     market_3 = create(:market, state: 'Colorado')
-  #     market_4 = create(:market, state: 'Idaho')
-  #     market_5 = create(:market, state: 'California')
-  #     create_list(:market_vendor, 3, market_id: market_1.id)
-  #     create_list(:market_vendor, 2, market_id: market_5.id)
-  #     create_list(:market_vendor, 2, market_id: market_2.id)
-  #     create_list(:market_vendor, 2, market_id: market_3.id)
-  #     create_list(:market_vendor, 1, market_id: market_4.id)
+  describe 'most popular states' do
+    it 'returns a list of states in order of total number of vendors that sell at markets in that state' do
+      market_1 = create(:market, state: 'California')
+      market_2 = create(:market, state: 'Colorado')
+      market_3 = create(:market, state: 'Colorado')
+      market_4 = create(:market, state: 'Idaho')
+      market_5 = create(:market, state: 'California')
+      create_list(:market_vendor, 3, market_id: market_1.id)
+      create_list(:market_vendor, 2, market_id: market_5.id)
+      create_list(:market_vendor, 2, market_id: market_2.id)
+      create_list(:market_vendor, 2, market_id: market_3.id)
+      create_list(:market_vendor, 1, market_id: market_4.id)
 
-  #     get '/api/v0/vendors/popular_states'
+      get '/api/v0/vendors/popular_states'
 
-  #     expect(response.status).to eq(200)
+      expect(response.status).to eq(200)
 
-  #     data = JSON.parse(response.body, symbolize_names: true)
-  #     states = data[:data]
+      data = JSON.parse(response.body, symbolize_names: true)
+      states = data[:data]
       
-  #     states.each do |state|
-  #       expect(state).to have_key(:state)
-  #       expect(state).to have_key(:number_of_vendors)
-  #     end
+      states.each do |state|
+        expect(state).to have_key(:state)
+        expect(state).to have_key(:number_of_vendors)
+      end
 
-  #     state = states.first
-  #     expect(state[:state]).to eq('California')
-  #     expect(state[:number_of_vendors]).to eq(5)
-  #   end
-  # end
+      state = states.first
+      expect(state[:state]).to eq('California')
+      expect(state[:number_of_vendors]).to eq(5)
+    end
+  end
 
   describe 'vendors that sell in a particular state' do
     it 'returns a list of vendors that sell in a given state' do
