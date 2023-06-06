@@ -1,24 +1,16 @@
-# README
+# Market Money
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+The Market Money API provides developers with data about local markets and the vendors that sell their products there. It offers a RESTful architecture, allowing developers to interact with the API using standard JSON consumption.
 
-Things you may want to cover:
+This README provides an overview of the API.
 
-* Ruby version
+## Features
 
-* System dependencies
+- **Market Data:** Retrieve information about local markets, including their names, addresses, coordinates, and number of vendors who sell there.
 
-* Configuration
+- **Vendor Data:** Access data about vendors operating in local markets, including their names, description of products, contact information, and whether they accept credit.
 
-* Database creation
+- **Search Functionality:** Search for markets based on various parameters, such as name and location.
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- **Closest ATM:** Find the closest ATM, sorted by distance, from a given market.
+  - This feature utilizes the [TomTom API](https://developer.tomtom.com/)
